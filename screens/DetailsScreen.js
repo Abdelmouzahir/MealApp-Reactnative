@@ -3,24 +3,32 @@ import { MEALS } from "../data/dummy-data";
 import MealDetails from "../components/MealDetails";
 import Subtitle from "../components/Subtitle";
 import List from "../components/List";
-import { useLayoutEffect } from "react";
+import { useContext, useLayoutEffect } from "react";
 import IconButton from "../components/IconButton";
+import { FavoritesContext } from "../store/context/favorites-context";
 
 export default function DetailsScreen({route, navigation}) {
-     
-    function headerButton() {
-      console.log('Fav button pressed');
+    const favMealsCtx = useContext(FavoritesContext);
+    
+
+    function changeFavStatus() {
+      if(mealIsFav) {
+        favMealsCtx.removeFavorite(mealId);
+      } else {
+        favMealsCtx.addFavorite(mealId);
+      }
     }
     useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => {
-                return <IconButton icon='star'  color='white' onPress={headerButton} />
+                return <IconButton icon={mealIsFav ? 'star' : 'star-outline'}  color={mealIsFav ? 'yellow' : 'white'} onPress={changeFavStatus} />
             }
         });
-    }, [navigation, headerButton]);
+    }, [navigation, changeFavStatus]);
 
     const mealId = route.params.mealId;
     const selectedMeal = MEALS.find((meal) => meal.id === mealId);  // find the meal with the given id
+    const mealIsFav = favMealsCtx.ids.includes(mealId);
     return (
         <View style={styles.container}>
         <ScrollView  style={styles.containerScroll}>
