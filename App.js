@@ -1,34 +1,61 @@
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-gesture-handler';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View, } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import MealsOvScreen from './screens/MealsOvScreen';
-
+import DetailsScreen from './screens/DetailsScreen';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import CategoryScreen from './screens/CategoryScreen';
+import FavoriteScreen from './screens/FavoriteScreen';
+import {Ionicons} from '@expo/vector-icons';
 
 const Stack = createStackNavigator();
+const drawer = createDrawerNavigator();
+
+function DrawerNavigator(){
+  return (
+    <drawer.Navigator screenOptions={{
+      headerStyle: { backgroundColor: '#f4511e'},
+      headerTintColor: '#fff',
+      sceneContainerStyle: {backgroundColor: '#FFB38E'},
+      drawerContentStyle: {backgroundColor: '#FFB38E'},
+      drawerInactiveTintColor: '#D04848',
+      drawerActiveTintColor: '#fff',
+      drawerActiveBackgroundColor: '#D04848',
+      }}>
+      <drawer.Screen name="Categories" component={CategoryScreen} 
+         options={{title:'All Categories',
+                 drawerIcon:({color, size}) => <Ionicons name='list' color={color} size={size} />}} />
+      <drawer.Screen name="Favorite" component={FavoriteScreen} options={{
+                 drawerIcon:({color, size}) => <Ionicons name='star' color={color} size={size} />}} />
+    </drawer.Navigator>
+  );
+}
+
 
 export default function App() {
   return (
     <>
       <StatusBar style="light" />
       <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="Meals Categories" component={CategoryScreen} />
-          <Stack.Screen name="Meals OverView" component={MealsOvScreen} />
+        <Stack.Navigator screenOptions={{
+            headerStyle: { backgroundColor: '#f4511e'},
+            headerTintColor: '#fff',
+            contentStyle: {backgroundColor: '#f4511e'},// not working
+            }}>
+            <Stack.Screen name="MealsCategories" component={DrawerNavigator} options={{
+              headerShown: false
+            }}
+
+          />
+          <Stack.Screen name="MealsOverView" component={MealsOvScreen} />
+          <Stack.Screen name="DetailScreen" component={DetailsScreen}  options={{
+            title: 'Meal Details',
+          }}/>
         </Stack.Navigator>
       </NavigationContainer>
       
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

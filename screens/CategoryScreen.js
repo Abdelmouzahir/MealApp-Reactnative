@@ -5,7 +5,7 @@ import CategoryGrTile from '../components/CategoryGrTile';
 export default function CategoryScreen({navigation}) {
     
     function renderCatItem(itemData) {
-        function pressHandler() {  navigation.navigate('Meals OverView',{
+        function pressHandler() {  navigation.navigate('MealsOverView',{
             categoryId: itemData.item.id,
             title: itemData.item.title,
           
@@ -15,6 +15,7 @@ export default function CategoryScreen({navigation}) {
     
     return (
         <FlatList
+          style={ {backgroundColor: '#FFB38E'}}
           data={CATEGORIES}
           keyExtractor={(item) => item.id}  // keyExtractor is a function that extracts a unique key for a given item.
           renderItem={renderCatItem}
