@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import "react-native-gesture-handler";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Text, View, Alert } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import MealsOvScreen from "./screens/MealsOvScreen";
@@ -9,7 +9,9 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import CategoryScreen from "./screens/CategoryScreen";
 import FavoriteScreen from "./screens/FavoriteScreen";
 import { Ionicons } from "@expo/vector-icons";
+import { useEffect } from "react";
 import FavoritesProvider from "./store/context/favorites-context";
+import * as Notifications from "expo-notifications";
 
 const Stack = createStackNavigator();
 const drawer = createDrawerNavigator();
@@ -51,6 +53,31 @@ function DrawerNavigator() {
 }
 
 export default function App() {
+  useEffect(() => {
+    async function configureNotifications() {
+      const { status } = await Notifications.getPermissionsAsync();
+      let finalStatus = status;
+
+      if (status !== "granted") {
+        await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+
+      if (finalStatus !== "granted") {
+        Alert.alert(
+          "No notification permissions!",
+          "You need to grant notification permissions to use the app.",
+          [{ text: "Okay" }]
+        );
+        return;
+      }
+
+      const pushTokendata = await Notifications.getExpoPushTokenAsync();
+      console.log(pushTokendata);
+    }
+    configureNotifications();
+  }, []);
+
   return (
     <>
       <StatusBar style="light" />

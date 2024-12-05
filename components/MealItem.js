@@ -78,7 +78,7 @@ export default function MealItem({
           />
         </View>
       </Pressable>
-      <Button title="View Details" onPress={sendNotification} />
+      <Button title="Notification" onPress={sendNotification} />
     </View>
   );
 }
